@@ -1,5 +1,7 @@
 #pragma region Include
 
+#pragma once
+
 #include "Interface.hpp"
 
 #pragma endregion

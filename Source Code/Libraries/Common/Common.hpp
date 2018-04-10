@@ -1,5 +1,7 @@
 #pragma region Include
 
+#pragma once
+
 #include <string>
 #include <list>
 #include <memory>
