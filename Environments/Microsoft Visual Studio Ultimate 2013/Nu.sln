@@ -6,6 +6,17 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Others", "Others", "{50AE8669-6BDB-4A0F-A7A6-6257B37F7653}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Console", "Projects\Others\Console\Console.vcxproj", "{28203E19-E94C-4B92-8555-13118F0A76EC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{435A1180-A9C2-43AB-A865-A64E1E6786E9} = {435A1180-A9C2-43AB-A865-A64E1E6786E9}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{DAD54448-AE03-4BE6-96A1-A0632A29144A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Projects\Libraries\Common\Common.vcxproj", "{435A1180-A9C2-43AB-A865-A64E1E6786E9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nu", "Nu", "{47F0002F-42C8-437C-A384-DC055D8B1DBF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lexer", "Projects\Libraries\Nu\Lexer\Lexer.vcxproj", "{134CA452-A152-4762-A0B3-7FA0726F57A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,11 +28,22 @@ Global
 		{28203E19-E94C-4B92-8555-13118F0A76EC}.Debug|Win32.Build.0 = Debug|Win32
 		{28203E19-E94C-4B92-8555-13118F0A76EC}.Release|Win32.ActiveCfg = Release|Win32
 		{28203E19-E94C-4B92-8555-13118F0A76EC}.Release|Win32.Build.0 = Release|Win32
+		{435A1180-A9C2-43AB-A865-A64E1E6786E9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{435A1180-A9C2-43AB-A865-A64E1E6786E9}.Debug|Win32.Build.0 = Debug|Win32
+		{435A1180-A9C2-43AB-A865-A64E1E6786E9}.Release|Win32.ActiveCfg = Release|Win32
+		{435A1180-A9C2-43AB-A865-A64E1E6786E9}.Release|Win32.Build.0 = Release|Win32
+		{134CA452-A152-4762-A0B3-7FA0726F57A0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{134CA452-A152-4762-A0B3-7FA0726F57A0}.Debug|Win32.Build.0 = Debug|Win32
+		{134CA452-A152-4762-A0B3-7FA0726F57A0}.Release|Win32.ActiveCfg = Release|Win32
+		{134CA452-A152-4762-A0B3-7FA0726F57A0}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{28203E19-E94C-4B92-8555-13118F0A76EC} = {50AE8669-6BDB-4A0F-A7A6-6257B37F7653}
+		{435A1180-A9C2-43AB-A865-A64E1E6786E9} = {DAD54448-AE03-4BE6-96A1-A0632A29144A}
+		{47F0002F-42C8-437C-A384-DC055D8B1DBF} = {DAD54448-AE03-4BE6-96A1-A0632A29144A}
+		{134CA452-A152-4762-A0B3-7FA0726F57A0} = {47F0002F-42C8-437C-A384-DC055D8B1DBF}
 	EndGlobalSection
 EndGlobal
