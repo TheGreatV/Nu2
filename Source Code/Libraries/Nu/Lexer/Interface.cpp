@@ -59,8 +59,21 @@ void Nu::Lexer::Token::Visitor::Visit(const Token::Group& token_)
 
 #pragma endregion
 
+
+void Nu::Lexer::Token::Accept(Visitor& visitor_) const
+{
+}
+
 #pragma endregion
 
+#pragma region Token::Whitespace
+
+void Nu::Lexer::Token::Whitespace::Accept(Visitor& visitor_) const
+{
+	visitor_.Visit(*this);
+}
+
+#pragma endregion
 #pragma region Token::Comment
 
 void Nu::Lexer::Token::Comment::Accept(Visitor& visitor_) const
@@ -163,8 +176,6 @@ void Nu::Lexer::Token::Group::Accept(Visitor& visitor_) const
 {
 	visitor_.Visit(*this);
 }
-
-#pragma endregion
 
 #pragma endregion
 

@@ -21,12 +21,18 @@
     <ClCompile Include="..\..\..\..\..\..\Source Code\Libraries\Nu\Lexer\Interface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Source Code\Libraries\Nu\Lexer\Parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\Source Code\Libraries\Nu\Lexer\Lexer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\Source Code\Libraries\Nu\Lexer\Interface.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\Source Code\Libraries\Nu\Lexer\Parser.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

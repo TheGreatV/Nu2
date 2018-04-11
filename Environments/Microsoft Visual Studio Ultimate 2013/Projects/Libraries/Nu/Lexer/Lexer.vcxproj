@@ -72,10 +72,12 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\Source Code\Libraries\Nu\Lexer\Interface.cpp" />
     <ClCompile Include="..\..\..\..\..\..\Source Code\Libraries\Nu\Lexer\Lexer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\Source Code\Libraries\Nu\Lexer\Parser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\Source Code\Libraries\Nu\Lexer\Interface.hpp" />
     <ClInclude Include="..\..\..\..\..\..\Source Code\Libraries\Nu\Lexer\Lexer.hpp" />
+    <ClInclude Include="..\..\..\..\..\..\Source Code\Libraries\Nu\Lexer\Parser.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Interface.hpp"
+#include "Parser.hpp"
 
 #pragma endregion
 

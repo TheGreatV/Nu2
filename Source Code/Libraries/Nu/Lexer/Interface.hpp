@@ -28,8 +28,15 @@ namespace Nu
 		public:
 			using Character = WideString::value_type;
 		public:
-			class Quotation;
+			class Quotation:
+				public virtual Entity
+			{
+			};
 			class Brace;
+		public:
+			virtual bool IsWhitespace(const Character& character_) const = 0;
+			virtual bool IsLetter(const Character& character_) const = 0;
+			virtual bool IsQuotation(const Character& character_) const = 0;
 		};
 		class Token:
 			public virtual Entity
@@ -48,8 +55,8 @@ namespace Nu
 			class Identifier;
 			class Literal;
 			class Group;
-		private:
-			virtual void Accept(Visitor& visitor_) const = 0;
+		protected:
+			virtual void Accept(Visitor& visitor_) const;
 		public:
 			virtual Offset GetOffset() const = 0;
 			virtual Length GetLength() const = 0;
@@ -59,7 +66,7 @@ namespace Nu
 		class Token::Whitespace:
 			public virtual Token
 		{
-		private:
+		protected:
 			virtual void Accept(Visitor& visitor_) const override;
 		};
 #pragma endregion
@@ -72,7 +79,7 @@ namespace Nu
 			class Block;
 			class Top;
 			class Bottom;
-		private:
+		protected:
 			virtual void Accept(Visitor& visitor_) const override;
 		};
 #pragma endregion
@@ -80,7 +87,7 @@ namespace Nu
 		class Token::Comment::Line:
 			public virtual Comment
 		{
-		private:
+		protected:
 			virtual void Accept(Visitor& visitor_) const override;
 		};
 #pragma endregion
@@ -88,7 +95,7 @@ namespace Nu
 		class Token::Comment::Block:
 			public virtual Comment
 		{
-		private:
+		protected:
 			virtual void Accept(Visitor& visitor_) const override;
 		};
 #pragma endregion
@@ -96,7 +103,7 @@ namespace Nu
 		class Token::Comment::Top:
 			public virtual Comment
 		{
-		private:
+		protected:
 			virtual void Accept(Visitor& visitor_) const override;
 		};
 #pragma endregion
@@ -104,7 +111,7 @@ namespace Nu
 		class Token::Comment::Bottom:
 			public virtual Comment
 		{
-		private:
+		protected:
 			virtual void Accept(Visitor& visitor_) const override;
 		};
 #pragma endregion
@@ -117,7 +124,7 @@ namespace Nu
 			class Comma;
 			class Semicolon;
 			class Colon;
-		private:
+		protected:
 			virtual void Accept(Visitor& visitor_) const override;
 		};
 #pragma endregion
@@ -125,7 +132,7 @@ namespace Nu
 		class Token::Special::Dot:
 			public virtual Special
 		{
-		private:
+		protected:
 			virtual void Accept(Visitor& visitor_) const override;
 		};
 #pragma endregion
@@ -133,7 +140,7 @@ namespace Nu
 		class Token::Special::Comma:
 			public virtual Special
 		{
-		private:
+		protected:
 			virtual void Accept(Visitor& visitor_) const override;
 		};
 #pragma endregion
@@ -141,7 +148,7 @@ namespace Nu
 		class Token::Special::Semicolon:
 			public virtual Special
 		{
-		private:
+		protected:
 			virtual void Accept(Visitor& visitor_) const override;
 		};
 #pragma endregion
@@ -149,7 +156,7 @@ namespace Nu
 		class Token::Special::Colon:
 			public virtual Special
 		{
-		private:
+		protected:
 			virtual void Accept(Visitor& visitor_) const override;
 		};
 #pragma endregion
@@ -157,7 +164,7 @@ namespace Nu
 		class Token::Identifier:
 			public virtual Token
 		{
-		private:
+		protected:
 			virtual void Accept(Visitor& visitor_) const override;
 		};
 #pragma endregion
@@ -165,7 +172,7 @@ namespace Nu
 		class Token::Literal:
 			public virtual Token
 		{
-		private:
+		protected:
 			virtual void Accept(Visitor& visitor_) const override;
 		public:
 			virtual StrongPointer<Alphabet::Quotation> GetOpening() const = 0;
@@ -179,7 +186,7 @@ namespace Nu
 		{
 		public:
 			using Content = List<StrongPointer<Token>>;
-		private:
+		protected:
 			virtual void Accept(Visitor& visitor_) const override;
 		public:
 			virtual Content GetContent() const = 0;
