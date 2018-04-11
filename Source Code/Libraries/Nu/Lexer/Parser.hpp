@@ -616,6 +616,8 @@ void Nu::Lexer::Parser::Parse(const Input& input_) const
 					auto const tokenLength	= position - tokenOffset;
 					auto const tokenText	= input_.substr(tokenOffset, tokenLength);
 					auto const token = MakeStrong<Token::Literal>(opening, closing, tokenOffset, tokenText);
+
+					break;
 				}
 				else if (character == L'\\') // screening
 				{
@@ -632,10 +634,6 @@ void Nu::Lexer::Parser::Parse(const Input& input_) const
 					}
 				}
 			}
-
-			auto const tokenLength = position - tokenOffset;
-			auto const tokenText = input_.substr(tokenOffset, tokenLength);
-			auto const token = MakeStrong<Token::Identifier>(tokenOffset, tokenText);
 		}
 		else if (character == L'.')
 		{
@@ -666,19 +664,6 @@ void Nu::Lexer::Parser::Parse(const Input& input_) const
 			throw Exception();
 		}
 	}
-
-
-	/*// scan for top comment
-	auto blockCommentOpeningOffset = FindBlockCommentOpeningOffset(input_, offset);
-	auto blockCommentEndingOffset = FindBlockCommentClosingOffset(input_, offset);
-	auto quotationOffset = FindQuotationOffset(input_, offset, alphabet);
-
-	if (blockCommentEndingOffset < blockCommentOpeningOffset && blockCommentEndingOffset < quotationOffset)
-	{
-		auto length = blockCommentEndingOffset - offset;
-		auto text = input_.substr(offset, length - offset);
-		auto topComment = MakeStrong<Token::Comment::Top>(offset, text);
-	}*/
 }
 
 #pragma endregion
