@@ -33,11 +33,15 @@ namespace Testing
 				}
 				TEST_METHOD(Identifiers)
 				{
-					Parse(L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*-=_+<>?|\/");
+					Parse(L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*-=_+<>?|\\/");
 				}
 				TEST_METHOD(Literals)
 				{
 					Parse(L"'abc\\'xyz\\\"ikj\\\\nml\"");
+				}
+				TEST_METHOD(Groups)
+				{
+					Parse(L"()(}(]{){}{][)[}[]((()))");
 				}
 			};
 		}

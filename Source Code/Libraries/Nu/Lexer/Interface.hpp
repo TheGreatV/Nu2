@@ -32,11 +32,16 @@ namespace Nu
 				public virtual Entity
 			{
 			};
-			class Brace;
+			class Brace:
+				public virtual Entity
+			{
+			};
 		public:
 			virtual bool IsWhitespace(const Character& character_) const = 0;
 			virtual bool IsLetter(const Character& character_) const = 0;
 			virtual bool IsQuotation(const Character& character_) const = 0;
+			virtual bool IsOpeningBrace(const Character& character_) const = 0;
+			virtual bool IsClosingBrace(const Character& character_) const = 0;
 		};
 		class Token:
 			public virtual Entity

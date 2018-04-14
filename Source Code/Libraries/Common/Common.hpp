@@ -39,6 +39,10 @@ namespace Common
 	class Exception
 	{
 	};
+	class NotImplementedException:
+		public Exception
+	{
+	};
 }
 
 
