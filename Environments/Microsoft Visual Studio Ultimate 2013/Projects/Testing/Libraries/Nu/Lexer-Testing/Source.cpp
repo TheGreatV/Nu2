@@ -17,12 +17,12 @@ namespace Testing
 			TEST_CLASS(SmokeTest)
 			{
 			protected:
-				inline Parser::Output Parse(const Parser::Input& input_) // TODO: add output
+				inline Vector<StrongPointer<Token>> Parse(const Parser::Input& input_) // TODO: add output
 				{
 					auto const parser = Parser();
 					auto const output = Move(parser.Parse(input_));
 
-					return Move(output);
+					return Move(ToVector(output));
 				}
 			public:
 				TEST_METHOD(Whitespaces)
@@ -46,6 +46,31 @@ namespace Testing
 					Parse(L"()(}(]{){}{][)[}[]((()))");
 				}
 			public:
+				TEST_METHOD(Comment_Combined)
+				{
+					auto tokens = Move(Parse(Common::WideString() +
+						L"abc"							+ L"\n" +
+						L"`\\ def \\`"					+ L"\n" +
+						L"`/ ghi \\`"					+ L"\n" +
+						L"`\\ `\\ `/ jkl \\`"			+ L"\n" +
+						L"\\` \\`"						+ L"\n" +
+						L"\\`"							+ L"\n" +
+						L"mno"							+ L"\n" +
+						L"`\\"							+ L"\n" +
+						L"`\\ `\\ `/ pqr \\`"			+ L"\n" +
+						L"\\` \\`"						+ L"\n" +
+						L"`\\ stu \\`"					+ L"\n" +
+						L"vwx"							+ L"\n" +
+					L""));
+
+					Assert::IsTrue(tokens.size() == 5);
+
+					Assert::IsTrue(DynamicCast<Token::Comment::Top>(tokens[0]) != nullptr);
+					Assert::IsTrue(DynamicCast<Token::Comment::Whitespace>(tokens[1]) != nullptr);
+					Assert::IsTrue(DynamicCast<Token::Comment::Identifier>(tokens[2]) != nullptr);
+					Assert::IsTrue(DynamicCast<Token::Comment::Whitespace>(tokens[3]) != nullptr);
+					Assert::IsTrue(DynamicCast<Token::Comment::Bottom>(tokens[4]) != nullptr);
+				}
 				TEST_METHOD(Comment_Line)
 				{
 					auto &tokens = Move(Parse(Common::WideString() +

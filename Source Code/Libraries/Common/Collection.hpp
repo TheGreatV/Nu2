@@ -53,6 +53,19 @@ namespace Common
 	}
 
 
+	template<class Type_> Vector<Type_> ToVector(const List<Type_>& source_)
+	{
+		auto vector = Vector<Type_>();
+
+		vector.reserve(source_.size());
+
+		for (auto &i : source_)
+		{
+			vector.push_back(i);
+		}
+
+		return Move(vector);
+	}
 	template<class Type_, class Predicate_> Vector<Type_> Filter(const Vector<Type_>& source_, Predicate_ predicate_)
 	{
 		Vector<Type_> output;
