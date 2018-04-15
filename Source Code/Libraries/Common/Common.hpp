@@ -2,9 +2,16 @@
 
 #pragma once
 
-#include <string>
-#include <list>
-#include <memory>
+#include "Size.hpp"
+#include "Memory.hpp"
+#include "Move.hpp"
+#include "Reference.hpp"
+#include "String.hpp"
+#include "Collection.hpp"
+#include "Exception.hpp"
+// #include "Mathematics.hpp"
+// #include "Image.hpp"
+// #include "Helpers.hpp"
 
 #pragma endregion
 
@@ -13,45 +20,16 @@
 #pragma endregion
 
 
-namespace Common
+namespace GreatVEngine2
 {
-	using Size									= std::size_t;
-
-	using String								= std::string;
-	using WideString							= std::wstring;
-
-	template<class Type_> using List			= std::list<Type_>;
-	template<class Type_> using StrongPointer	= std::shared_ptr<Type_>;
-
-	template<class Type_, class... Arguments_> StrongPointer<Type_> MakeStrong(Arguments_&&... arguments)
-	{
-		return std::make_shared<Type_>(std::forward<Arguments_>(arguments)...);
-	}
-	template<class DestinationType_, class SourceType_> StrongPointer<DestinationType_> StaticCast(const StrongPointer<SourceType_>& source_)
-	{
-		return std::static_pointer_cast<DestinationType_>(source_);
-	}
-	template<class DestinationType_, class SourceType_> StrongPointer<DestinationType_> DynamicCast(const StrongPointer<SourceType_>& source_)
-	{
-		return std::dynamic_pointer_cast<DestinationType_>(source_);
-	}
-
-	class Exception
-	{
-	};
-	class NotImplementedException:
-		public Exception
-	{
-	};
 }
 
 
-#pragma region Common
+#pragma region GreatVEngine2
 #pragma endregion
 
 
-#pragma region Region
+#pragma region
 #pragma endregion
-
 
 

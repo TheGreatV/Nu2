@@ -260,14 +260,35 @@ namespace Nu
 			}
 		};
 #pragma endregion
-/*#pragma region Token::Comment::Block
+#pragma region Token::Comment::Block
 		class Token::Comment::Block:
-			public virtual Comment
+			public virtual Lexer::Token::Comment::Block,
+			public Comment
 		{
-		private:
-			virtual void Accept(Visitor& visitor_) const override;
+		public:
+			inline Block(const Offset& offset_, const Text& text_): Comment(offset_, text_)
+			{
+			}
+		protected:
+			inline virtual void Accept(Visitor& visitor_) const override
+			{
+				Lexer::Token::Comment::Block::Accept(visitor_);
+			}
+		public:
+			inline virtual Offset GetOffset() const override
+			{
+				return Token::GetOffset();
+			}
+			inline virtual Length GetLength() const override
+			{
+				return Token::GetLength();
+			}
+			inline virtual Text GetText() const override
+			{
+				return Token::GetText();
+			}
 		};
-#pragma endregion*/
+#pragma endregion
 #pragma region Token::Comment::Top
 		class Token::Comment::Top:
 			public virtual Lexer::Token::Comment::Top,
@@ -297,14 +318,35 @@ namespace Nu
 			}
 		};
 #pragma endregion
-/*#pragma region Token::Comment::Bottom
+#pragma region Token::Comment::Bottom
 		class Token::Comment::Bottom:
-			public virtual Comment
+			public virtual Lexer::Token::Comment::Bottom,
+			public Comment
 		{
-		private:
-			virtual void Accept(Visitor& visitor_) const override;
+		public:
+			inline Bottom(const Offset& offset_, const Text& text_): Comment(offset_, text_)
+			{
+			}
+		protected:
+			inline virtual void Accept(Visitor& visitor_) const override
+			{
+				Lexer::Token::Comment::Bottom::Accept(visitor_);
+			}
+		public:
+			inline virtual Offset GetOffset() const override
+			{
+				return Token::GetOffset();
+			}
+			inline virtual Length GetLength() const override
+			{
+				return Token::GetLength();
+			}
+			inline virtual Text GetText() const override
+			{
+				return Token::GetText();
+			}
 		};
-#pragma endregion*/
+#pragma endregion
 #pragma region Token::Special
 		class Token::Special:
 			public virtual Lexer::Token::Special,
@@ -599,7 +641,10 @@ namespace Nu
 				return std::numeric_limits<Offset>::max();
 			}
 		protected:
-			inline static Token::Group::Content ParseTokens(const Input& input_, Offset& position_, const Alphabet& alphabet_);
+			inline static Offset SkipTillCommentClosingInsideBlockComment(const Input& input_, Offset& position_);
+			inline static Offset SkipTillCommentClosing(const Input& input_, Offset& position_);
+			inline static Pair<Offset, Offset> ParseOuterCommentsComments(const Input& input_, const Alphabet& alphabet_);
+			inline static Token::Group::Content ParseTokens(const Input& input_, Offset& position_, const Offset& length_, const Alphabet& alphabet_);
 		public:
 			inline Output Parse(const Input& input_) const;
 		};
@@ -707,15 +752,216 @@ bool Nu::Lexer::Parser::Alphabet::IsClosingBrace(const Character& character_) co
 
 #pragma endregion
 
-
-Nu::Lexer::Parser::Token::Group::Content Nu::Lexer::Parser::ParseTokens(const Input& input_, Offset& position_, const Alphabet& alphabet_)
+/*Nu::Lexer::Parser::Offset Nu::Lexer::Parser::SkipTillCommentClosingInsideBlockComment(const Input& input_, Offset& position_)
 {
-	Token::Group::Content content;
+	auto const length = input_.size();
+	auto position = position_;
 
+	while (position < length)
+	{
+		auto const character = input_[position++];
+
+		if (character == L'`') // process block comments
+		{
+			if (position >= length)
+			{
+				throw Exception();
+			}
+
+			auto const character = input_[position++];
+
+			if (character == L'\\')
+			{
+				position = SkipTillCommentClosing(input_, position);
+			}
+		}
+		else if (character == L'\\')
+		{
+			if (position >= length)
+			{
+				throw Exception();
+			}
+
+			auto const character = input_[position++];
+
+			if (character == L'`')
+			{
+				break;
+			}
+		}
+	}
+
+	return position;
+}*/
+/*Nu::Lexer::Parser::Offset Nu::Lexer::Parser::SkipTillCommentClosing(const Input& input_, Offset& position_)
+{
 	auto const length		= input_.size();
 	auto position			= position_;
 
 	while (position < length)
+	{
+		auto const character	= input_[position++];
+
+		if (character == L'`') // process block comments
+		{
+			if (position >= length)
+			{
+				throw Exception();
+			}
+
+			auto const character = input_[position++];
+
+			if (character == L'\\')
+			{
+				position = SkipTillCommentClosingInsideBlockComment(input_, position);
+			}
+		}
+		else if (character == L'\\')
+		{
+			if (position >= length)
+			{
+				throw Exception();
+			}
+
+			auto const character = input_[position++];
+			
+			if (character == L'`')
+			{
+				break;
+			}
+		}
+	}
+
+	return position;
+}*/
+
+Common::Pair<Nu::Lexer::Parser::Offset, Nu::Lexer::Parser::Offset> Nu::Lexer::Parser::ParseOuterCommentsComments(const Input& input_, const Alphabet& alphabet_)
+{
+	auto const length		= input_.size();
+	auto position			= Offset(0);
+	auto begin				= position;
+	auto end				= length;
+	auto level				= Size(0);
+
+	while (position < length)
+	{
+		auto const character	= input_[position++];
+
+		if (character == L'`') // process block comments
+		{
+			if (position >= length)
+			{
+				throw Exception();
+			}
+
+			auto const character = input_[position++];
+			
+			if (character == L'\\')
+			{
+				if (level == 0)
+				{
+					end = position - 2;
+				}
+
+				++level;
+			}
+			else if (character == L'/')
+			{
+				while (position < length)
+				{
+					auto const character = input_[position++];
+
+					if (character == L'\n')
+					{
+						break;
+					}
+				}
+			}
+			else
+			{
+				// TODO
+				throw NotImplementedException();
+			}
+		}
+		else if (character == L'\\') // process block comments
+		{
+			if (position >= length)
+			{
+				throw Exception();
+			}
+
+			auto const character = input_[position++];
+			
+			if (character == L'`')
+			{
+				if (level > 0)
+				{
+					--level;
+				}
+				else
+				{
+					begin = position;
+				}
+			}
+		}
+		else if (alphabet_.IsQuotation(character))
+		{
+			while (true)
+			{
+				if (position >= length)
+				{
+					throw Exception();
+				}
+
+				auto const character = input_[position++];
+
+				if (alphabet_.IsQuotation(character)) // closing quotation
+				{
+					break;
+				}
+				else if (character == L'\\') // screening
+				{
+					if (position >= length)
+					{
+						throw Exception();
+					}
+
+					auto const character = input_[position++];
+
+					if (!(alphabet_.IsQuotation(character) || character == L'\\'))
+					{
+						throw Exception(); // unsupported screened character
+					}
+				}
+			}
+		}
+	}
+
+	if (level == 0)
+	{
+		end = length;
+	}
+
+	return { begin, end };
+}
+Nu::Lexer::Parser::Token::Group::Content Nu::Lexer::Parser::ParseTokens(const Input& input_, Offset& position_, const Offset& length_, const Alphabet& alphabet_)
+{
+	auto content			= Token::Group::Content();
+	auto position			= position_;
+
+	auto get = [&]()
+	{
+		if (position >= length_)
+		{
+			throw Exception();
+		}
+
+		auto const character = input_[position++];
+
+		return character;
+	};
+
+	while (position < length_)
 	{
 		auto const character	= input_[position];
 		auto const tokenOffset	= position++;
@@ -724,28 +970,72 @@ Nu::Lexer::Parser::Token::Group::Content Nu::Lexer::Parser::ParseTokens(const In
 		{
 			if (character == L'`')
 			{
-				// TODO
-				/*if (position >= length)
-				{
-					throw Exception();
-				}
-			
-				auto const character = input_[position++];
+				auto const character = get();
 
 				if (character == L'/')
 				{
-					// TODO
+					while (position < length_ && input_[position] != L'\n')
+					{
+						++position;
+					}
+
+					auto const tokenLength	= position - tokenOffset;
+					auto const tokenText	= input_.substr(tokenOffset, tokenLength);
+					auto const token		= MakeStrong<Token::Comment::Line>(tokenOffset, tokenText);
+
+					return token;
+				}
+				else if (character == L'\\')
+				{
+					auto level = Size(1);
+
+					while (level > 0)
+					{
+						auto const character = get();
+
+						if (character == L'\\')
+						{
+							if (position >= length_)
+							{
+								throw Exception();
+							}
+
+							auto const character = input_[position++];
+
+							if (character == L'`')
+							{
+								--level;
+							}
+						}
+						else if (character == L'`')
+						{
+							auto const character = get();
+
+							if (character == L'\\')
+							{
+								++level;
+							}
+							else if (character == L'/')
+							{
+								while (get() != L'\n');
+							}
+						}
+					}
+
+					auto const tokenLength	= position - tokenOffset;
+					auto const tokenText	= input_.substr(tokenOffset, tokenLength);
+					auto const token		= MakeStrong<Token::Comment::Block>(tokenOffset, tokenText);
+
+					return token;
 				}
 				else
 				{
 					throw Exception();
-				}*/
-
-				throw NotImplementedException();
+				}
 			}
 			else if (alphabet_.IsWhitespace(character))
 			{
-				while (position < length && alphabet_.IsWhitespace(input_[position]))
+				while (position < length_ && alphabet_.IsWhitespace(input_[position]))
 				{
 					++position;
 				}
@@ -758,7 +1048,7 @@ Nu::Lexer::Parser::Token::Group::Content Nu::Lexer::Parser::ParseTokens(const In
 			}
 			else if (alphabet_.IsLetter(character))
 			{
-				while (position < length && alphabet_.IsLetter(input_[position]))
+				while (position < length_ && alphabet_.IsLetter(input_[position]))
 				{
 					++position;
 				}
@@ -775,12 +1065,7 @@ Nu::Lexer::Parser::Token::Group::Content Nu::Lexer::Parser::ParseTokens(const In
 			
 				while (true)
 				{
-					if (position >= length)
-					{
-						throw Exception();
-					}
-
-					auto const character = input_[position++];
+					auto const character = get();
 
 					if (alphabet_.IsQuotation(character)) // closing quotation
 					{
@@ -793,12 +1078,7 @@ Nu::Lexer::Parser::Token::Group::Content Nu::Lexer::Parser::ParseTokens(const In
 					}
 					else if (character == L'\\') // screening
 					{
-						if (position >= length)
-						{
-							throw Exception();
-						}
-					
-						auto const character = input_[position++];
+						auto const character = get();
 
 						if (!alphabet_.IsQuotation(character) && character != L'\\')
 						{
@@ -813,16 +1093,11 @@ Nu::Lexer::Parser::Token::Group::Content Nu::Lexer::Parser::ParseTokens(const In
 
 				while (true)
 				{
-					if (position >= length)
-					{
-						throw Exception();
-					}
-
-					auto const character = input_[position++];
+					auto const character = get();
 
 					if (alphabet_.IsClosingBrace(character)) // closing quotation
 					{
-						auto const content =	ParseTokens(input_, position, alphabet_);
+						auto const content =	ParseTokens(input_, position, length_, alphabet_);
 						auto const closing		= alphabet_.GetClosingBrace(character); // TODO: check != null
 						auto const tokenLength	= position - tokenOffset;
 						auto const tokenText	= input_.substr(tokenOffset, tokenLength);
@@ -866,7 +1141,7 @@ Nu::Lexer::Parser::Token::Group::Content Nu::Lexer::Parser::ParseTokens(const In
 			}
 			else
 			{
-				return nullptr;
+				return StrongPointer<Token>(nullptr);
 			}
 		}();
 
@@ -885,13 +1160,34 @@ Nu::Lexer::Parser::Token::Group::Content Nu::Lexer::Parser::ParseTokens(const In
 
 Nu::Lexer::Parser::Output Nu::Lexer::Parser::Parse(const Input& input_) const
 {
-	auto const alphabet = Alphabet();
+	auto const alphabet	= Alphabet();
+	auto const limits	= ParseOuterCommentsComments(input_, alphabet);
+	auto const length	= input_.length();
+	auto position		= limits.first;
 
-	Offset position = 0;
+	auto tokens = ParseTokens(input_, position, limits.second, alphabet);
 
-	auto tokens = ParseTokens(input_, position, alphabet);
+	if (limits.first > 0)
+	{
+		auto const tokenOffset	= Offset(0);
+		auto const tokenLength	= limits.first;
+		auto const tokenText	= input_.substr(tokenOffset, tokenLength);
+		auto const token		= MakeStrong<Token::Comment::Top>(tokenOffset, tokenText);
 
-	if (position < input_.length())
+		tokens.push_front(token);
+	}
+
+	if (limits.second < length)
+	{
+		auto const tokenOffset	= limits.second;
+		auto const tokenLength	= length - tokenOffset;
+		auto const tokenText	= input_.substr(tokenOffset, tokenLength);
+		auto const token		= MakeStrong<Token::Comment::Bottom>(tokenOffset, tokenText);
+
+		tokens.push_back(token);
+	}
+
+	if (position < limits.second)
 	{
 		throw Exception(); // TODO
 	}

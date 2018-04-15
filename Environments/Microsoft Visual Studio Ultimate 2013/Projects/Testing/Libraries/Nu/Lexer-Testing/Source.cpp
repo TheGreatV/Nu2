@@ -11,16 +11,18 @@ namespace Testing
 	{
 		namespace Lexer
 		{
+			using namespace Common;
 			using namespace ::Nu::Lexer;
 
 			TEST_CLASS(SmokeTest)
 			{
 			protected:
-				inline void Parse(const Parser::Input& input_) // TODO: add output
+				inline Parser::Output Parse(const Parser::Input& input_) // TODO: add output
 				{
-					auto parser = Parser();
+					auto const parser = Parser();
+					auto const output = Move(parser.Parse(input_));
 
-					parser.Parse(input_);
+					return Move(output);
 				}
 			public:
 				TEST_METHOD(Whitespaces)
@@ -42,6 +44,45 @@ namespace Testing
 				TEST_METHOD(Groups)
 				{
 					Parse(L"()(}(]{){}{][)[}[]((()))");
+				}
+			public:
+				TEST_METHOD(Comment_Line)
+				{
+					auto &tokens = Move(Parse(Common::WideString() +
+						L"abc`/def" + L"\n" +
+					L""));
+				}
+				TEST_METHOD(Comment_Top)
+				{
+					Parse(L"abc\\`def");
+				}
+				TEST_METHOD(Comment_TopNested)
+				{
+					Parse(L"abc`\\def\\`ghi\\`jkl");
+				}
+				TEST_METHOD(Comment_DoubleTop)
+				{
+					Parse(L"abc\\`def\\`ghi");
+				}
+				TEST_METHOD(Comment_DoubleTopNested)
+				{
+					Parse(L"abc`\\def\\`ghi\\`jkl\\`mno");
+				}
+				TEST_METHOD(Comment_Bottom)
+				{
+					Parse(L"uvw`\\xyz");
+				}
+				TEST_METHOD(Comment_BottomNested)
+				{
+					Parse(L"opq`\\rst`\\uvw\\`xyz");
+				}
+				TEST_METHOD(Comment_DoubleBottom)
+				{
+					Parse(L"rst`\\uvw`\\xyz");
+				}
+				TEST_METHOD(Comment_DoubleBottomNested)
+				{
+					Parse(L"lnm`\\opq`\\rst`\\uvw\\`xyz");
 				}
 			};
 		}
