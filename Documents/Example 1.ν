@@ -1,0 +1,51 @@
+`/ thouts about ν language
+
+`/ general
+{
+	`/ my line comment
+	`\ my block comment \`
+	my-namespace: new interface {
+		my-class: new interface {
+			factory my-prototype: interface {
+			};
+		};
+		my-operator: operator none body {
+			my-variable: new my-class;
+		};
+	};
+}
+
+
+`/ objects with same interface
+{
+	my-interface: interface {
+		a: new A;
+		b: new B;
+	};
+	
+	my-instance-1: new my-interface;
+	my-instance-2: new my-interface;
+}
+
+
+`/ thouts about instancing
+{
+	`/ operator argument should be an instance, not just interface
+	I: interface {};
+	operator none right group (new I); `/ error, "I" is not an instance
+	J: new interface {};
+	operator none right group (new J); `/ OK
+}
+
+
+`/ "function"
+{
+	`/ function none my-function(int x)
+	my-function: new interface {
+		operator none right group (x: new int) body {
+		};
+	};
+}
+
+
+
