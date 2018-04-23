@@ -24,6 +24,11 @@ namespace Nu
 
 #pragma region Parser
 
+/*void Nu::Parser::Parser::Parse()
+{
+	auto instance = new Instance();
+}*/
+
 #pragma endregion
 
 #pragma endregion

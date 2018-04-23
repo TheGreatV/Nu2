@@ -48,4 +48,57 @@
 }
 
 
+`/ instanceable entites overview
+{
+	`/ "Instanceable" - is an entity, which can produce other entites.
+	`/ E.g., interface is instanceable:
+	x: new interface {}
+	`/ Moreover, several entities may be produced using a single instanceable entity.
+	i: interface {};
+	x: new i; `/ have same instanceable
+	y: new i; `/ have same instanceable
+	`/ Any entity may be instanceable. To do so, entity interface should have "factory" section.
+	`/ Entity, which will be created via this kind of interface, may be used as argument for operator "new" too:
+	i: interface {
+		`/ the following section lets opportunities to use instance of this interface as argument for "new" operator
+		factory interface {};
+	};
+	x: new i; `/ create instance of instanceable "i"
+	a: new x; `/ create instance of instanceable "x"
+	`/ TODO
+	i: interface { factory interface {}; };
+	x: new i;
+	y: new i;
+	a: new x;
+	b: new y; `/ even if "b" have the same interface as "a", instanceable of "b" ("y") is different from "a" ("x")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
