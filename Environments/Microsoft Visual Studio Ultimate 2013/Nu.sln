@@ -36,6 +36,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Parser", "Projects\Librarie
 		{435A1180-A9C2-43AB-A865-A64E1E6786E9} = {435A1180-A9C2-43AB-A865-A64E1E6786E9}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Parser-Testing", "Projects\Testing\Libraries\Nu\Parser-Testing\Parser-Testing.vcxproj", "{B16E7998-4880-4EDF-B29B-220EDCD5C837}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7245AF08-4F44-4A40-81F6-BA22DDCC1E6F} = {7245AF08-4F44-4A40-81F6-BA22DDCC1E6F}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -62,6 +67,10 @@ Global
 		{7245AF08-4F44-4A40-81F6-BA22DDCC1E6F}.Debug|Win32.Build.0 = Debug|Win32
 		{7245AF08-4F44-4A40-81F6-BA22DDCC1E6F}.Release|Win32.ActiveCfg = Release|Win32
 		{7245AF08-4F44-4A40-81F6-BA22DDCC1E6F}.Release|Win32.Build.0 = Release|Win32
+		{B16E7998-4880-4EDF-B29B-220EDCD5C837}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B16E7998-4880-4EDF-B29B-220EDCD5C837}.Debug|Win32.Build.0 = Debug|Win32
+		{B16E7998-4880-4EDF-B29B-220EDCD5C837}.Release|Win32.ActiveCfg = Release|Win32
+		{B16E7998-4880-4EDF-B29B-220EDCD5C837}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,5 +84,6 @@ Global
 		{A3C456D3-A04A-4532-84D6-EB5BF7D5C5D9} = {1A01BEC1-A804-49BD-971B-148B13909341}
 		{BDD4742D-CF94-40BC-B1CD-12D6B16EAEF9} = {A3C456D3-A04A-4532-84D6-EB5BF7D5C5D9}
 		{E4292AEE-D117-433B-8A84-8BA7FB6B971A} = {BDD4742D-CF94-40BC-B1CD-12D6B16EAEF9}
+		{B16E7998-4880-4EDF-B29B-220EDCD5C837} = {BDD4742D-CF94-40BC-B1CD-12D6B16EAEF9}
 	EndGlobalSection
 EndGlobal
