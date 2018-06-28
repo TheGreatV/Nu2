@@ -18,6 +18,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nu", "Nu", "{47F0002F-42C8-437C-A384-DC055D8B1DBF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lexer", "Projects\Libraries\Nu\Lexer\Lexer.vcxproj", "{134CA452-A152-4762-A0B3-7FA0726F57A0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{435A1180-A9C2-43AB-A865-A64E1E6786E9} = {435A1180-A9C2-43AB-A865-A64E1E6786E9}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{1A01BEC1-A804-49BD-971B-148B13909341}"
 EndProject
