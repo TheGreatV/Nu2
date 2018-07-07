@@ -20,6 +20,8 @@ namespace Nu
 
 		class Instance;
 		class Interface;
+		class Sequence;
+		class _SequenceElement; // workaround for forward-declaration
 
 
 		class Entity
@@ -183,11 +185,20 @@ namespace Nu
 		{
 		};
 
+		class _SequenceElement:
+			public virtual Entity
+		{
+		};
 		class Sequence:
-			public virtual Unit
+			public virtual Entity, // public virtual Unit
+			public virtual _SequenceElement,
+			public virtual Operator::Argument
 		{
 		public:
-			virtual List<StrongPointer<Unit>> GetUnits() const = 0;
+			using Element = _SequenceElement;
+			using Elements = Vector<StrongPointer<Element>>;
+		public:
+			virtual Elements GetElements() const = 0;
 		};
 		class Group:
 			public virtual Unit
@@ -243,8 +254,8 @@ namespace Nu
 		 * This entity may be used as operator argument: f(none)
 		 */
 		class None:
-			public virtual Unit,
-			public virtual Operator::Body
+			public virtual Entity,
+			public virtual Sequence::Element
 		{
 		};
 	}

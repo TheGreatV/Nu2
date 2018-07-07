@@ -29,6 +29,8 @@ namespace Nu
 			class Entity;
 			class Named;
 			class Operator;
+			class Sequence;
+			class _SequenceElement;
 			class None;
 		public:
 			template<class Type_, class... Arguments_> inline static StrongPointer<Type_> Make(Arguments_&&... arguments_);
@@ -53,6 +55,16 @@ namespace Nu
 		public:
 			inline Named(const StrongPointer<Named>& this_);
 			inline ~Named() override = default;
+		};
+#pragma endregion
+#pragma region Parser::_SequenceElement
+		class Parser::_SequenceElement:
+			public virtual Parsing::_SequenceElement,
+			public virtual Entity
+		{
+		public:
+			inline _SequenceElement(const StrongPointer<_SequenceElement>& this_);
+			inline ~_SequenceElement() override = default;
 		};
 #pragma endregion
 #pragma region Parser::Operator
@@ -99,7 +111,7 @@ namespace Nu
 #pragma endregion
 #pragma region Parser::Operator::Argument
 		class Parser::Operator::Argument:
-			public Parsing::Operator::Argument,
+			public virtual Parsing::Operator::Argument,
 			public virtual Parser::Entity
 		{
 		protected:
@@ -121,13 +133,37 @@ namespace Nu
 			inline ~Body() override = default;
 		};
 #pragma endregion
+#pragma region Parser::Sequence
+		class Parser::Sequence:
+			public virtual Parsing::Sequence,
+			public virtual Entity,
+			public _SequenceElement,
+			public Operator::Argument
+		{
+		protected:
+			using Abstraction = Parsing::Sequence;
+			using Implementation = Parser;
+		public:
+			using Element = Implementation::_SequenceElement;
+			using Elements = Vector<StrongPointer<Element>>;
+		protected:
+			const Elements elements;
+		public:
+			inline Sequence(const StrongPointer<Sequence>& this_, const Elements& elements_);
+			inline ~Sequence() override = default;
+		public:
+			inline Abstraction::Elements	GetElements() const override;
+			inline Elements					GetElements2() const;
+		};
+#pragma endregion
 #pragma region Parser::None
 		class Parser::None:
 			public Parsing::None,
 			public virtual Entity,
 			public Operator::Result,
 			public Operator::Argument,
-			public Operator::Body
+			public Operator::Body,
+			public Sequence::Element
 		{
 		public:
 			inline None(const StrongPointer<None>& this_);
@@ -236,13 +272,55 @@ Common::StrongPointer<Nu::Parsing::Parser::Operator::Body> Nu::Parsing::Parser::
 
 #pragma endregion
 
+#pragma region Sequence
+
+#pragma region Element
+
+Nu::Parsing::Parser::_SequenceElement::_SequenceElement(const Common::StrongPointer<_SequenceElement>& this_):
+	Parser::Entity(this_)
+{
+}
+
+#pragma endregion
+
+
+Nu::Parsing::Parser::Sequence::Sequence(const Common::StrongPointer<Sequence>& this_, const Elements& elements_):
+	Parser::Entity(this_),
+	Implementation::_SequenceElement(this_),
+	Operator::Argument(this_),
+	elements(elements_)
+{
+}
+
+Nu::Parsing::Parser::Sequence::Abstraction::Elements Nu::Parsing::Parser::Sequence::GetElements() const
+{
+	Abstraction::Elements elementsToReturn;
+
+	elementsToReturn.reserve(elements.size());
+
+	for (auto &element : elements)
+	{
+		elementsToReturn.push_back(element);
+	}
+
+	return Move(elementsToReturn);
+}
+Nu::Parsing::Parser::Sequence::Elements Nu::Parsing::Parser::Sequence::GetElements2() const
+{
+	return elements;
+}
+
+#pragma endregion
+
+
 #pragma region None
 
 Nu::Parsing::Parser::None::None(const Common::StrongPointer<None>& this_):
 	Parser::Entity(this_),
 	Operator::Result(this_),
 	Operator::Argument(this_),
-	Operator::Body(this_)
+	Operator::Body(this_),
+	Sequence::Element(this_)
 {
 }
 
