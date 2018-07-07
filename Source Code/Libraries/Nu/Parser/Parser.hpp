@@ -64,10 +64,16 @@ namespace Nu
 			using Abstraction = Parsing::Operator;
 		public:
 			class Result;
-		protected:
-			const StrongPointer<Result> result;
+			class Argument;
+			class Body;
 		public:
-			inline Operator(const StrongPointer<Operator>& this_, const StrongPointer<Result>& result_);
+			using Arguments = Vector<StrongPointer<Argument>>;
+		protected:
+			const StrongPointer<Result>	result;
+			const Arguments				arguments;
+			const StrongPointer<Body>	body;
+		public:
+			inline Operator(const StrongPointer<Operator>& this_, const StrongPointer<Result>& result_, const Arguments& arguments_, const StrongPointer<Body>& body_);
 			inline ~Operator() override = default;
 		public:
 			inline StrongPointer<Abstraction::Result>	GetResult() const override;
@@ -75,6 +81,8 @@ namespace Nu
 			inline StrongPointer<Abstraction::Body>		GetBody() const override;
 		public:
 			inline StrongPointer<Result>				GetResult2() const;
+			inline Arguments							GetArguments2() const;
+			inline StrongPointer<Body>					GetBody2() const;
 		};
 #pragma endregion
 #pragma region Parser::Operator::Result
@@ -83,17 +91,43 @@ namespace Nu
 			public virtual Parser::Entity
 		{
 		protected:
-			using Abstraction = Parsing::Operator;
+			using Abstraction = Parsing::Operator::Result;
 		public:
 			inline Result(const StrongPointer<Result>& this_);
 			inline ~Result() override = default;
+		};
+#pragma endregion
+#pragma region Parser::Operator::Argument
+		class Parser::Operator::Argument:
+			public Parsing::Operator::Argument,
+			public virtual Parser::Entity
+		{
+		protected:
+			using Abstraction = Parsing::Operator::Argument;
+		public:
+			inline Argument(const StrongPointer<Argument>& this_);
+			inline ~Argument() override = default;
+		};
+#pragma endregion
+#pragma region Parser::Operator::Body
+		class Parser::Operator::Body:
+			public Parsing::Operator::Body,
+			public virtual Parser::Entity
+		{
+		protected:
+			using Abstraction = Parsing::Operator::Body;
+		public:
+			inline Body(const StrongPointer<Body>& this_);
+			inline ~Body() override = default;
 		};
 #pragma endregion
 #pragma region Parser::None
 		class Parser::None:
 			public Parsing::None,
 			public virtual Entity,
-			public Operator::Result
+			public Operator::Result,
+			public Operator::Argument,
+			public Operator::Body
 		{
 		public:
 			inline None(const StrongPointer<None>& this_);
@@ -128,7 +162,7 @@ Nu::Parsing::Parser::Named::Named(const Common::StrongPointer<Named>& this_):
 
 #pragma region Operator
 
-#pragma region Operator
+#pragma region Result
 
 Nu::Parsing::Parser::Operator::Result::Result(const Common::StrongPointer<Result>& this_):
 	Parser::Entity(this_)
@@ -137,11 +171,31 @@ Nu::Parsing::Parser::Operator::Result::Result(const Common::StrongPointer<Result
 
 #pragma endregion
 
+#pragma region Argument
 
-Nu::Parsing::Parser::Operator::Operator(const Common::StrongPointer<Operator>& this_, const Common::StrongPointer<Result>& result_):
+Nu::Parsing::Parser::Operator::Argument::Argument(const Common::StrongPointer<Argument>& this_):
+	Parser::Entity(this_)
+{
+}
+
+#pragma endregion
+
+#pragma region Body
+
+Nu::Parsing::Parser::Operator::Body::Body(const Common::StrongPointer<Body>& this_):
+	Parser::Entity(this_)
+{
+}
+
+#pragma endregion
+
+
+Nu::Parsing::Parser::Operator::Operator(const Common::StrongPointer<Operator>& this_, const Common::StrongPointer<Result>& result_, const Arguments& arguments_, const Common::StrongPointer<Body>& body_):
 	Parser::Entity(this_),
 	Parser::Named(this_),
-	result(result_)
+	result(result_),
+	arguments(arguments_),
+	body(body_)
 {
 }
 
@@ -151,16 +205,33 @@ Common::StrongPointer<Nu::Parsing::Parser::Operator::Abstraction::Result> Nu::Pa
 }
 Nu::Parsing::Parser::Operator::Abstraction::Arguments Nu::Parsing::Parser::Operator::GetArguments() const
 {
-	throw NotImplementedException();
+	Abstraction::Arguments argumentsToReturn;
+
+	argumentsToReturn.reserve(arguments.size());
+
+	for (auto &argument : arguments)
+	{
+		argumentsToReturn.push_back(argument);
+	}
+	
+	return Move(argumentsToReturn);
 }
 Common::StrongPointer<Nu::Parsing::Parser::Operator::Abstraction::Body> Nu::Parsing::Parser::Operator::GetBody() const
 {
-	throw NotImplementedException();
+	return body;
 }
 
 Common::StrongPointer<Nu::Parsing::Parser::Operator::Result> Nu::Parsing::Parser::Operator::GetResult2() const
 {
 	return result;
+}
+Nu::Parsing::Parser::Operator::Arguments Nu::Parsing::Parser::Operator::GetArguments2() const
+{
+	return arguments;
+}
+Common::StrongPointer<Nu::Parsing::Parser::Operator::Body> Nu::Parsing::Parser::Operator::GetBody2() const
+{
+	return body;
 }
 
 #pragma endregion
@@ -169,7 +240,9 @@ Common::StrongPointer<Nu::Parsing::Parser::Operator::Result> Nu::Parsing::Parser
 
 Nu::Parsing::Parser::None::None(const Common::StrongPointer<None>& this_):
 	Parser::Entity(this_),
-	Operator::Result(this_)
+	Operator::Result(this_),
+	Operator::Argument(this_),
+	Operator::Body(this_)
 {
 }
 

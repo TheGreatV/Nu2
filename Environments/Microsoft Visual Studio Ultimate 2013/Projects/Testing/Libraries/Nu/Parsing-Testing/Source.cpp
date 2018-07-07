@@ -14,17 +14,30 @@ namespace Testing
 			using namespace Common;
 			using namespace ::Nu::Parsing;
 
-			TEST_CLASS(SandboxTest)
+			namespace Sandbox
 			{
-				TEST_METHOD(Test1)
+				TEST_CLASS(Operator)
 				{
-					auto operator_result	= Parser::Make<Parser::None>();
-					auto the_operator		= Parser::Make<Parser::Operator>(operator_result);
+					TEST_METHOD(EmptyOperator)
+					{
+						auto the_none			= Parser::Make<Parser::None>();
 
-					the_operator->GetResult();
-					the_operator->GetResult2();
-				}
-			};
+						auto operator_result	= the_none;
+						auto operator_arguments	= Parser::Operator::Arguments({});
+						auto operator_body		= the_none;
+						auto the_operator		= Parser::Make<Parser::Operator>(operator_result, operator_arguments, operator_body);
+
+						the_operator->GetResult();
+						the_operator->GetResult2();
+
+						the_operator->GetArguments();
+						the_operator->GetArguments2();
+
+						the_operator->GetBody();
+						the_operator->GetBody2();
+					}
+				};
+			}
 		}
 	}
 }
