@@ -1,12 +1,15 @@
 #include <../Common/Common.hpp>
 #include <../Nu/Lexer/Lexer.hpp>
-#include <../Nu/Parser/Parser.hpp>
+#include <../Parser/Parser.hpp>
 
 
 void main()
 {
-	auto input = Common::WideString(L"'abc\\'\\\"xyz\"");
-	auto lexer = Nu::Lexer::Parser();
+	Nu::Lexer::Parser lexer;
 
-	auto tokens = lexer.Parse(input);
+	auto lexerOutput = lexer.Parse(L"a:");
+
+	Nu::Parsing::Parser parser;
+
+	// parser.Parse(lexerOutput);
 }

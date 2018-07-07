@@ -13,7 +13,7 @@
 
 namespace Nu
 {
-	namespace Parser
+	namespace Parsing
 	{
 		using namespace Common;
 
@@ -65,41 +65,38 @@ namespace Nu
 		class Scope::Direct:
 			public virtual Scope
 		{
-		public:
-			// TODO
 		};
 #pragma endregion
 
 		class Operator:
-			public virtual Entity,
-			public virtual Named,
-			public virtual Scope::Direct
+			public virtual Named // public virtual Scope::Direct
 		{
 		public:
 			class Result;
 			class Argument;
 			class Body;
 		public:
-			virtual StrongPointer<Result> GetResult() const = 0;
-			virtual StrongPointer<Argument> GetLeft() const = 0;
-			virtual StrongPointer<Argument> GetRight() const = 0;
-			virtual StrongPointer<Body> GetBody() const = 0;
+			using Arguments = Vector<StrongPointer<Argument>>;
+		public:
+			virtual StrongPointer<Result>	GetResult() const = 0;
+			virtual Arguments				GetArguments() const = 0;
+			virtual StrongPointer<Body>		GetBody() const = 0;
 		};
 #pragma region Operator::Result
 		class Operator::Result:
-			public virtual Scope::Direct
+			public virtual Entity // public virtual Scope::Direct
 		{
 		};
 #pragma endregion
 #pragma region Operator::Argument
 		class Operator::Argument:
-			public virtual Scope::Direct
+			public virtual Entity // public virtual Scope::Direct
 		{
 		};
 #pragma endregion
 #pragma region Operator::Body
 		class Operator::Body:
-			public virtual Scope::Direct
+			public virtual Entity // public virtual Scope::Direct
 		{
 		public:
 			class CommandsList;
@@ -126,8 +123,12 @@ namespace Nu
 		};
 #pragma endregion
 #pragma region Operator::Body::CommandsList::Command::Create
+		/**
+		 * This entity may be used as operator argument: f(new x)
+		 */
 		class Operator::Body::CommandsList::Command::Create:
-			public virtual Command
+			public virtual Command,
+			public virtual Operator::Argument
 		{
 		public:
 			virtual StrongPointer<Instance> GetInstance() const = 0;
@@ -142,17 +143,22 @@ namespace Nu
 		};
 #pragma endregion
 #pragma region Operator::Body::CommandsList::Command::Call
+		/**
+		 * This entity may be used as operator argument: f(g())
+		 */
 		class Operator::Body::CommandsList::Command::Call:
-			public virtual Command
+			public virtual Command,
+			public virtual Operator::Argument
 		{
 		public:
 			class Result;
 			class Argument;
 		public:
-			virtual StrongPointer<Operator> GetOperator() const = 0;
-			virtual StrongPointer<Result> GetResult() const = 0;
-			virtual StrongPointer<Argument> GetLeft() const = 0;
-			virtual StrongPointer<Argument> GetRight() const = 0;
+			using Arguments = Vector<StrongPointer<Argument>>;
+		public:
+			virtual StrongPointer<Operator>	GetOperator() const = 0;
+			virtual StrongPointer<Result>	GetResult() const = 0;
+			virtual Arguments				GetArguments() const = 0;
 		};
 #pragma endregion
 #pragma region Operator::Body::CommandsList::Command::Call::Result
@@ -164,13 +170,12 @@ namespace Nu
 #pragma region Operator::Body::CommandsList::Command::Call::Argument
 		class Operator::Body::CommandsList::Command::Call::Argument:
 			public virtual Entity
-
 		{
 		};
 #pragma endregion
 
 		class Unit:
-			public virtual Named,
+			public virtual Entity,
 			public virtual Operator::Result,
 			public virtual Operator::Argument,
 			public virtual Operator::Body::CommandsList::Command::Call::Result,
@@ -208,14 +213,17 @@ namespace Nu
 			virtual StrongPointer<Interface> GetInterface() const = 0;
 		};
 		class Interface:
-			public virtual Entity,
+			public virtual Unit,
 			public virtual Scope::Free,
 			public virtual Instanceable
 		{
 		};
 		class Instance:
 			public virtual Unit,
-			public virtual Scope::Free
+			public virtual Scope::Free, // TODO
+			public virtual Operator::Argument,
+			public virtual Operator::Body::CommandsList::Command::Call::Argument,
+			public virtual Operator::Body::CommandsList::Command::Call::Result
 		{
 		public:
 			virtual StrongPointer<Instanceable> GetInstanceable() const = 0;
@@ -230,6 +238,10 @@ namespace Nu
 		{
 		};
 
+		/**
+		 * This entity may be used as operator result: operator none a;
+		 * This entity may be used as operator argument: f(none)
+		 */
 		class None:
 			public virtual Unit,
 			public virtual Operator::Body

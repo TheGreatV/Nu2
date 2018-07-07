@@ -3,6 +3,7 @@
 #pragma once
 
 #include <../Common/Common.hpp>
+#include <../Lexer/Lexer.hpp>
 
 #pragma endregion
 
@@ -13,7 +14,7 @@
 
 namespace Nu
 {
-	namespace Parser
+	namespace Parsing
 	{
 	}
 }
@@ -21,7 +22,7 @@ namespace Nu
 
 #pragma region Nu
 
-#pragma region Parser
+#pragma region Parsing
 #pragma endregion
 
 #pragma endregion
