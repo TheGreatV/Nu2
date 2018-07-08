@@ -104,6 +104,37 @@ namespace Testing
 						Assert::IsTrue(arguments2[0] == the_sequence);
 					}
 				};
+				TEST_CLASS(OperatorOrder)
+				{
+					TEST_METHOD(EmptyOperatorOrder)
+					{
+						const auto the_none				= Parser::Make<Parser::None>();
+						
+						const auto operator_result		= the_none;
+						const auto operator_arguments	= Parser::Operator::Arguments({});
+						const auto the_operator			= Parser::Make<Parser::Operator>(operator_result, operator_arguments);
+
+						const auto the_order			= Parser::Make<Parser::Operator::Order>(the_operator);
+
+						// check operator
+						const auto order_operator		= the_order->GetOperator();
+
+						Assert::IsTrue(order_operator == the_operator);
+						
+						const auto order_operator2		= the_order->GetOperator2();
+
+						Assert::IsTrue(order_operator2 == the_operator);
+
+						// check order
+						const auto order_order			= the_order->GetOrder();
+
+						Assert::IsTrue(order_order == nullptr);
+						
+						const auto order_order2			= the_order->GetOrder2();
+
+						Assert::IsTrue(order_order2 == nullptr);
+					}
+				};
 				TEST_CLASS(Sequence)
 				{
 					TEST_METHOD(EmptySequence)

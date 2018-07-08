@@ -77,6 +77,7 @@ namespace Nu
 			class Result;
 			class Argument;
 			class Body;
+			class Order;
 		public:
 			using Arguments = Vector<StrongPointer<Argument>>;
 		public:
@@ -93,6 +94,15 @@ namespace Nu
 		class Operator::Argument:
 			public virtual Entity // public virtual Scope::Direct
 		{
+		};
+#pragma endregion
+#pragma region Operator::Order
+		class Operator::Order:
+			public virtual Entity // public virtual Scope::Direct
+		{
+		public:
+			virtual StrongPointer<Operator> GetOperator() const = 0;
+			virtual StrongPointer<Order> GetOrder() const = 0;
 		};
 #pragma endregion
 #pragma region Operator::Body

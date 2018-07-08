@@ -77,6 +77,7 @@ namespace Nu
 		public:
 			class Result;
 			class Argument;
+			class Order;
 			class Body;
 		public:
 			using Arguments = Vector<StrongPointer<Argument>>;
@@ -116,6 +117,28 @@ namespace Nu
 		public:
 			inline Argument(const StrongPointer<Argument>& this_);
 			inline ~Argument() override = default;
+		};
+#pragma endregion
+#pragma region Parser::Operator::Order
+		class Parser::Operator::Order:
+			public virtual Parsing::Operator::Order,
+			public virtual Parser::Entity
+		{
+		protected:
+			using Abstraction = Parsing::Operator;
+		protected:
+			const StrongPointer<Operator> the_operator;
+			const StrongPointer<Order> order;
+		public:
+			inline Order(const StrongPointer<Order>& this_, const StrongPointer<Operator>& the_operator_);
+			inline Order(const StrongPointer<Order>& this_, const StrongPointer<Operator>& the_operator_, const StrongPointer<Order>& order_);
+			inline ~Order() override = default;
+		public:
+			inline StrongPointer<Parsing::Operator> GetOperator() const override;
+			inline StrongPointer<Abstraction::Order> GetOrder() const override;
+		public:
+			inline StrongPointer<Operator> GetOperator2() const;
+			inline StrongPointer<Order> GetOrder2() const;
 		};
 #pragma endregion
 #pragma region Parser::Operator::Body
@@ -209,6 +232,38 @@ Nu::Parsing::Parser::Operator::Result::Result(const Common::StrongPointer<Result
 Nu::Parsing::Parser::Operator::Argument::Argument(const Common::StrongPointer<Argument>& this_):
 	Parser::Entity(this_)
 {
+}
+
+#pragma endregion
+
+#pragma region Order
+
+Nu::Parsing::Parser::Operator::Order::Order(const Common::StrongPointer<Order>& this_, const Common::StrongPointer<Operator>& the_operator_):
+	Order(this_, the_operator_, StrongPointer<Order>(nullptr))
+{
+}
+Nu::Parsing::Parser::Operator::Order::Order(const Common::StrongPointer<Order>& this_, const Common::StrongPointer<Operator>& the_operator_, const Common::StrongPointer<Order>& order_):
+	Parser::Entity(this_),
+	the_operator(the_operator_),
+	order(order_)
+{
+}
+
+Common::StrongPointer<Nu::Parsing::Operator> Nu::Parsing::Parser::Operator::Order::GetOperator() const
+{
+	return the_operator;
+}
+Common::StrongPointer<Nu::Parsing::Parser::Operator::Order::Abstraction::Order> Nu::Parsing::Parser::Operator::Order::GetOrder() const
+{
+	return order;
+}
+Common::StrongPointer<Nu::Parsing::Parser::Operator> Nu::Parsing::Parser::Operator::Order::GetOperator2() const
+{
+	return the_operator;
+}
+Common::StrongPointer<Nu::Parsing::Parser::Operator::Order> Nu::Parsing::Parser::Operator::Order::GetOrder2() const
+{
+	return order;
 }
 
 #pragma endregion
