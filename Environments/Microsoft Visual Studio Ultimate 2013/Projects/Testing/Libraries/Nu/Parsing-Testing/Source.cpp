@@ -24,9 +24,18 @@ namespace Testing
 						
 						const auto operator_result		= the_none;
 						const auto operator_arguments	= Parser::Operator::Arguments({});
-						const auto operator_body		= the_none;
-						const auto the_operator			= Parser::Make<Parser::Operator>(operator_result, operator_arguments, operator_body);
+						const auto the_operator			= Parser::Make<Parser::Operator>(operator_result, operator_arguments);
 
+						// check result
+						const auto result				= the_operator->GetResult();
+
+						Assert::IsTrue(result == the_none);
+
+						const auto result2				= the_operator->GetResult2();
+
+						Assert::IsTrue(result2 == the_none);
+
+						// check arguments
 						const auto arguments			= the_operator->GetArguments();
 
 						Assert::IsTrue(arguments.empty());
@@ -41,9 +50,18 @@ namespace Testing
 						
 						const auto operator_result		= the_none;
 						const auto operator_arguments	= Parser::Operator::Arguments({ the_none });
-						const auto operator_body		= the_none;
-						const auto the_operator			= Parser::Make<Parser::Operator>(operator_result, operator_arguments, operator_body);
+						const auto the_operator			= Parser::Make<Parser::Operator>(operator_result, operator_arguments);
 
+						// check result
+						const auto result				= the_operator->GetResult();
+
+						Assert::IsTrue(result == the_none);
+
+						const auto result2				= the_operator->GetResult2();
+
+						Assert::IsTrue(result2 == the_none);
+
+						// check arguments
 						const auto arguments			= the_operator->GetArguments();
 
 						Assert::IsTrue(arguments.size() == 1);
@@ -63,9 +81,18 @@ namespace Testing
 						
 						const auto operator_result		= the_none;
 						const auto operator_arguments	= Parser::Operator::Arguments({ the_sequence });
-						const auto operator_body		= the_none;
-						const auto the_operator			= Parser::Make<Parser::Operator>(operator_result, operator_arguments, operator_body);
+						const auto the_operator			= Parser::Make<Parser::Operator>(operator_result, operator_arguments);
 
+						// check result
+						const auto result				= the_operator->GetResult();
+
+						Assert::IsTrue(result == the_none);
+
+						const auto result2				= the_operator->GetResult2();
+
+						Assert::IsTrue(result2 == the_none);
+
+						// check arguments
 						const auto arguments			= the_operator->GetArguments();
 
 						Assert::IsTrue(arguments.size() == 1);
@@ -108,6 +135,23 @@ namespace Testing
 						
 						Assert::IsTrue(elements2.size() == 1);
 						Assert::IsTrue(elements2[0] == the_none);
+					}
+					TEST_METHOD(SequenceWithSingleElement_Sequence)
+					{
+						const auto the_argument_sequence	= Parser::Make<Parser::Sequence>(Parser::Sequence::Elements());
+
+						const auto sequence_elements		= Parser::Sequence::Elements({ the_argument_sequence });
+						const auto the_sequence				= Parser::Make<Parser::Sequence>(sequence_elements);
+
+						const auto elements					= the_sequence->GetElements();
+						
+						Assert::IsTrue(elements.size() == 1);
+						Assert::IsTrue(elements[0] == the_argument_sequence);
+
+						const auto elements2				= the_sequence->GetElements2();
+						
+						Assert::IsTrue(elements2.size() == 1);
+						Assert::IsTrue(elements2[0] == the_argument_sequence);
 					}
 				};
 			}

@@ -83,18 +83,15 @@ namespace Nu
 		protected:
 			const StrongPointer<Result>	result;
 			const Arguments				arguments;
-			const StrongPointer<Body>	body;
 		public:
-			inline Operator(const StrongPointer<Operator>& this_, const StrongPointer<Result>& result_, const Arguments& arguments_, const StrongPointer<Body>& body_);
+			inline Operator(const StrongPointer<Operator>& this_, const StrongPointer<Result>& result_, const Arguments& arguments_);
 			inline ~Operator() override = default;
 		public:
 			inline StrongPointer<Abstraction::Result>	GetResult() const override;
 			inline Abstraction::Arguments				GetArguments() const override;
-			inline StrongPointer<Abstraction::Body>		GetBody() const override;
 		public:
 			inline StrongPointer<Result>				GetResult2() const;
 			inline Arguments							GetArguments2() const;
-			inline StrongPointer<Body>					GetBody2() const;
 		};
 #pragma endregion
 #pragma region Parser::Operator::Result
@@ -226,12 +223,11 @@ Nu::Parsing::Parser::Operator::Body::Body(const Common::StrongPointer<Body>& thi
 #pragma endregion
 
 
-Nu::Parsing::Parser::Operator::Operator(const Common::StrongPointer<Operator>& this_, const Common::StrongPointer<Result>& result_, const Arguments& arguments_, const Common::StrongPointer<Body>& body_):
+Nu::Parsing::Parser::Operator::Operator(const Common::StrongPointer<Operator>& this_, const Common::StrongPointer<Result>& result_, const Arguments& arguments_):
 	Parser::Entity(this_),
 	Parser::Named(this_),
 	result(result_),
-	arguments(arguments_),
-	body(body_)
+	arguments(arguments_)
 {
 }
 
@@ -252,10 +248,6 @@ Nu::Parsing::Parser::Operator::Abstraction::Arguments Nu::Parsing::Parser::Opera
 	
 	return Move(argumentsToReturn);
 }
-Common::StrongPointer<Nu::Parsing::Parser::Operator::Abstraction::Body> Nu::Parsing::Parser::Operator::GetBody() const
-{
-	return body;
-}
 
 Common::StrongPointer<Nu::Parsing::Parser::Operator::Result> Nu::Parsing::Parser::Operator::GetResult2() const
 {
@@ -264,10 +256,6 @@ Common::StrongPointer<Nu::Parsing::Parser::Operator::Result> Nu::Parsing::Parser
 Nu::Parsing::Parser::Operator::Arguments Nu::Parsing::Parser::Operator::GetArguments2() const
 {
 	return arguments;
-}
-Common::StrongPointer<Nu::Parsing::Parser::Operator::Body> Nu::Parsing::Parser::Operator::GetBody2() const
-{
-	return body;
 }
 
 #pragma endregion

@@ -82,7 +82,6 @@ namespace Nu
 		public:
 			virtual StrongPointer<Result>	GetResult() const = 0;
 			virtual Arguments				GetArguments() const = 0;
-			virtual StrongPointer<Body>		GetBody() const = 0;
 		};
 #pragma region Operator::Result
 		class Operator::Result:
