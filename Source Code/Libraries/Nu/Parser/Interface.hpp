@@ -101,8 +101,35 @@ namespace Nu
 			public virtual Entity // public virtual Scope::Direct
 		{
 		public:
-			virtual StrongPointer<Operator> GetOperator() const = 0;
+			class Argument;
+		public:
+			virtual StrongPointer<Argument> GetArgument() const = 0;
 			virtual StrongPointer<Order> GetOrder() const = 0;
+		};
+#pragma endregion
+#pragma region Operator::Order::Argument
+		class Operator::Order::Argument:
+			public virtual Entity
+		{
+		public:
+			class Left;
+			class Right;
+		};
+#pragma endregion
+#pragma region Operator::Order::Argument::Left
+		class Operator::Order::Argument::Left:
+			public virtual Argument
+		{
+		public:
+			virtual StrongPointer<Operator> GetOperator() const = 0;
+		};
+#pragma endregion
+#pragma region Operator::Order::Argument::Right
+		class Operator::Order::Argument::Right:
+			public virtual Argument
+		{
+		public:
+			virtual StrongPointer<Operator> GetOperator() const = 0;
 		};
 #pragma endregion
 #pragma region Operator::Body
@@ -233,24 +260,24 @@ namespace Nu
 			virtual StrongPointer<Interface> GetInterface() const = 0;
 		};
 		class Interface:
-			public virtual Unit,
-			public virtual Scope::Free,
+			public virtual Entity, // Unit,
+			// public virtual Scope::Free,
 			public virtual Instanceable
 		{
 		};
 		class Instance:
-			public virtual Unit,
-			public virtual Scope::Free, // TODO
-			public virtual Operator::Argument,
-			public virtual Operator::Body::CommandsList::Command::Call::Argument,
-			public virtual Operator::Body::CommandsList::Command::Call::Result
+			public virtual Entity,  // , // Unit,
+			// public virtual Scope::Free, // TODO
+			public virtual Operator::Argument
+			// public virtual Operator::Body::CommandsList::Command::Call::Argument,
+			// public virtual Operator::Body::CommandsList::Command::Call::Result
 		{
 		public:
 			virtual StrongPointer<Instanceable> GetInstanceable() const = 0;
-			inline virtual Names GetNames() const override
+			/*inline virtual Names GetNames() const override
 			{
 				return GetInstanceable()->GetInterface()->GetNames();
-			}
+			}*/
 		};
 		class Factory:
 			public virtual Instance,

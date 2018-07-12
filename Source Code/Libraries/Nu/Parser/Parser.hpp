@@ -31,6 +31,9 @@ namespace Nu
 			class Operator;
 			class Sequence;
 			class _SequenceElement;
+			class Instanceable;
+			class Interface;
+			class Instance;
 			class None;
 		public:
 			template<class Type_, class... Arguments_> inline static StrongPointer<Type_> Make(Arguments_&&... arguments_);
@@ -124,21 +127,68 @@ namespace Nu
 			public virtual Parsing::Operator::Order,
 			public virtual Parser::Entity
 		{
+		public:
+			class Argument;
 		protected:
 			using Abstraction = Parsing::Operator;
 		protected:
-			const StrongPointer<Operator> the_operator;
+			const StrongPointer<Argument> argument;
 			const StrongPointer<Order> order;
 		public:
-			inline Order(const StrongPointer<Order>& this_, const StrongPointer<Operator>& the_operator_);
-			inline Order(const StrongPointer<Order>& this_, const StrongPointer<Operator>& the_operator_, const StrongPointer<Order>& order_);
+			inline Order(const StrongPointer<Order>& this_, const StrongPointer<Argument>& argument_);
+			inline Order(const StrongPointer<Order>& this_, const StrongPointer<Argument>& argument_, const StrongPointer<Order>& order_);
 			inline ~Order() override = default;
 		public:
+			inline StrongPointer<Abstraction::Order::Argument>	GetArgument() const override;
+			inline StrongPointer<Abstraction::Order>			GetOrder() const override;
+		public:
+			inline StrongPointer<Argument>	GetArgument2() const;
+			inline StrongPointer<Order>		GetOrder2() const;
+		};
+#pragma endregion
+#pragma region Parser::Operator::Order::Argument
+		class Parser::Operator::Order::Argument:
+			public virtual Parsing::Operator::Order::Argument,
+			public virtual Parser::Entity
+		{
+		public:
+			class Left;
+			class Right;
+		public:
+			inline Argument(const StrongPointer<Argument>& this_);
+			inline ~Argument() override = default;
+		};
+#pragma endregion
+#pragma region Parser::Operator::Order::Argument::Left
+		class Parser::Operator::Order::Argument::Left:
+			public virtual Parsing::Operator::Order::Argument::Left,
+			public Argument
+		{
+		protected:
+			const StrongPointer<Operator> the_operator;
+		public:
+			inline Left(const StrongPointer<Left>& this_, const StrongPointer<Operator>& the_operator_);
+			inline ~Left() override = default;
+		public:
 			inline StrongPointer<Parsing::Operator> GetOperator() const override;
-			inline StrongPointer<Abstraction::Order> GetOrder() const override;
 		public:
 			inline StrongPointer<Operator> GetOperator2() const;
-			inline StrongPointer<Order> GetOrder2() const;
+		};
+#pragma endregion
+#pragma region Parser::Operator::Order::Argument::Right
+		class Parser::Operator::Order::Argument::Right:
+			public virtual Parsing::Operator::Order::Argument::Right,
+			public Argument
+		{
+		protected:
+			const StrongPointer<Operator> the_operator;
+		public:
+			inline Right(const StrongPointer<Right>& this_, const StrongPointer<Operator>& the_operator_);
+			inline ~Right() override = default;
+		public:
+			inline StrongPointer<Parsing::Operator> GetOperator() const override;
+		public:
+			inline StrongPointer<Operator> GetOperator2() const;
 		};
 #pragma endregion
 #pragma region Parser::Operator::Body
@@ -174,6 +224,51 @@ namespace Nu
 		public:
 			inline Abstraction::Elements	GetElements() const override;
 			inline Elements					GetElements2() const;
+		};
+#pragma endregion
+#pragma region Parser::Instanceable
+		class Parser::Instanceable:
+			public virtual Parsing::Instanceable,
+			public virtual Entity
+		{
+		protected:
+			const StrongPointer<Interface> interface;
+		public:
+			inline Instanceable(const StrongPointer<Instanceable>& this_);
+			inline Instanceable(const StrongPointer<Instanceable>& this_, const StrongPointer<Interface>& interface_);
+			inline ~Instanceable() override = default;
+		public:
+			inline StrongPointer<Parsing::Interface> GetInterface() const override;
+			inline StrongPointer<Interface> GetInterface2() const;
+		};
+#pragma endregion
+#pragma region Parser::Interface
+		class Parser::Interface:
+			public virtual Parsing::Interface,
+			public virtual Entity,
+			public Instanceable
+		{
+		public:
+			inline Interface(const StrongPointer<Interface>& this_);
+			inline ~Interface() override = default;
+		public:
+			inline StrongPointer<Parsing::Interface> GetInterface() const override;
+		};
+#pragma endregion
+#pragma region Parser::Instance
+		class Parser::Instance:
+			public virtual Parsing::Instance,
+			public virtual Entity,
+			public Operator::Argument
+		{
+		protected:
+			const StrongPointer<Instanceable> instanceable;
+		public:
+			inline Instance(const StrongPointer<Instance>& this_, const StrongPointer<Instanceable>& instanceable_);
+			inline ~Instance() override = default;
+		public:
+			inline StrongPointer<Parsing::Instanceable> GetInstanceable() const override;
+			inline StrongPointer<Instanceable> GetInstanceable2() const;
 		};
 #pragma endregion
 #pragma region Parser::None
@@ -238,28 +333,79 @@ Nu::Parsing::Parser::Operator::Argument::Argument(const Common::StrongPointer<Ar
 
 #pragma region Order
 
-Nu::Parsing::Parser::Operator::Order::Order(const Common::StrongPointer<Order>& this_, const Common::StrongPointer<Operator>& the_operator_):
-	Order(this_, the_operator_, StrongPointer<Order>(nullptr))
+#pragma region Argument
+
+#pragma region Left
+
+Nu::Parsing::Parser::Operator::Order::Argument::Left::Left(const Common::StrongPointer<Left>& this_, const Common::StrongPointer<Operator>& the_operator_):
+	Parser::Entity(this_),
+	Argument(this_),
+	the_operator(the_operator_)
 {
 }
-Nu::Parsing::Parser::Operator::Order::Order(const Common::StrongPointer<Order>& this_, const Common::StrongPointer<Operator>& the_operator_, const Common::StrongPointer<Order>& order_):
+
+Common::StrongPointer<Nu::Parsing::Operator> Nu::Parsing::Parser::Operator::Order::Argument::Left::GetOperator() const
+{
+	return the_operator;
+}
+Common::StrongPointer<Nu::Parsing::Parser::Operator> Nu::Parsing::Parser::Operator::Order::Argument::Left::GetOperator2() const
+{
+	return the_operator;
+}
+
+#pragma endregion
+
+#pragma region Right
+
+Nu::Parsing::Parser::Operator::Order::Argument::Right::Right(const Common::StrongPointer<Right>& this_, const Common::StrongPointer<Operator>& the_operator_):
 	Parser::Entity(this_),
-	the_operator(the_operator_),
+	Argument(this_),
+	the_operator(the_operator_)
+{
+}
+
+Common::StrongPointer<Nu::Parsing::Operator> Nu::Parsing::Parser::Operator::Order::Argument::Right::GetOperator() const
+{
+	return the_operator;
+}
+Common::StrongPointer<Nu::Parsing::Parser::Operator> Nu::Parsing::Parser::Operator::Order::Argument::Right::GetOperator2() const
+{
+	return the_operator;
+}
+
+#pragma endregion
+
+
+Nu::Parsing::Parser::Operator::Order::Argument::Argument(const Common::StrongPointer<Argument>& this_):
+	Parser::Entity(this_)
+{
+}
+
+#pragma endregion
+
+
+Nu::Parsing::Parser::Operator::Order::Order(const Common::StrongPointer<Order>& this_, const Common::StrongPointer<Argument>& argument_):
+	Order(this_, argument_, StrongPointer<Order>(nullptr))
+{
+}
+Nu::Parsing::Parser::Operator::Order::Order(const Common::StrongPointer<Order>& this_, const Common::StrongPointer<Argument>& argument_, const Common::StrongPointer<Order>& order_) :
+	Parser::Entity(this_),
+	argument(argument_),
 	order(order_)
 {
 }
 
-Common::StrongPointer<Nu::Parsing::Operator> Nu::Parsing::Parser::Operator::Order::GetOperator() const
+Common::StrongPointer<Nu::Parsing::Operator::Order::Argument> Nu::Parsing::Parser::Operator::Order::GetArgument() const
 {
-	return the_operator;
+	return argument;
 }
 Common::StrongPointer<Nu::Parsing::Parser::Operator::Order::Abstraction::Order> Nu::Parsing::Parser::Operator::Order::GetOrder() const
 {
 	return order;
 }
-Common::StrongPointer<Nu::Parsing::Parser::Operator> Nu::Parsing::Parser::Operator::Order::GetOperator2() const
+Common::StrongPointer<Nu::Parsing::Parser::Operator::Order::Argument> Nu::Parsing::Parser::Operator::Order::GetArgument2() const
 {
-	return the_operator;
+	return argument;
 }
 Common::StrongPointer<Nu::Parsing::Parser::Operator::Order> Nu::Parsing::Parser::Operator::Order::GetOrder2() const
 {
@@ -351,6 +497,64 @@ Nu::Parsing::Parser::Sequence::Abstraction::Elements Nu::Parsing::Parser::Sequen
 Nu::Parsing::Parser::Sequence::Elements Nu::Parsing::Parser::Sequence::GetElements2() const
 {
 	return elements;
+}
+
+#pragma endregion
+
+#pragma region Instanceable
+
+Nu::Parsing::Parser::Instanceable::Instanceable(const Common::StrongPointer<Instanceable>& this_):
+	Instanceable(this_, StrongPointer<Interface>(nullptr))
+{
+}
+Nu::Parsing::Parser::Instanceable::Instanceable(const Common::StrongPointer<Instanceable>& this_, const Common::StrongPointer<Interface>& interface_):
+	Parser::Entity(this_),
+	interface(interface_)
+{
+}
+
+Common::StrongPointer<Nu::Parsing::Interface> Nu::Parsing::Parser::Instanceable::GetInterface() const
+{
+	return interface;
+}
+Common::StrongPointer<Nu::Parsing::Parser::Interface> Nu::Parsing::Parser::Instanceable::GetInterface2() const
+{
+	return interface;
+}
+
+#pragma endregion
+
+#pragma region Interface
+
+Nu::Parsing::Parser::Interface::Interface(const Common::StrongPointer<Interface>& this_):
+	Parser::Entity(this_),
+	Instanceable(this_, this_)
+{
+}
+
+Common::StrongPointer<Nu::Parsing::Interface> Nu::Parsing::Parser::Interface::GetInterface() const
+{
+	return Instanceable::GetInterface();
+}
+
+#pragma endregion
+
+#pragma region Instance
+
+Nu::Parsing::Parser::Instance::Instance(const Common::StrongPointer<Instance>& this_, const Common::StrongPointer<Instanceable>& instanceable_):
+	Parser::Entity(this_),
+	Operator::Argument(this_),
+	instanceable(instanceable_)
+{
+}
+
+Common::StrongPointer<Nu::Parsing::Instanceable> Nu::Parsing::Parser::Instance::GetInstanceable() const
+{
+	return instanceable;
+}
+Common::StrongPointer<Nu::Parsing::Parser::Instanceable> Nu::Parsing::Parser::Instance::GetInstanceable2() const
+{
+	return instanceable;
 }
 
 #pragma endregion
